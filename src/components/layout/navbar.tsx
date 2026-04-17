@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, PanelLeftOpen } from "lucide-react";
+import { LogOut, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 
@@ -8,6 +8,22 @@ import { ThemeToggle } from "@/components/common/theme-toggle";
 import { Button } from "@/components/ui/button";
 
 function getTitle(pathname: string) {
+  if (pathname.startsWith("/dashboard/settings")) {
+    return "Settings";
+  }
+
+  if (pathname.startsWith("/dashboard/recruiter/bookmarks")) {
+    return "Bookmarks";
+  }
+
+  if (pathname.startsWith("/dashboard/individual/ats-resume")) {
+    return "ATS Resume Builder";
+  }
+
+  if (pathname.startsWith("/dashboard/history")) {
+    return "History";
+  }
+
   if (pathname.startsWith("/dashboard/admin")) {
     return "Admin Dashboard";
   }
@@ -26,9 +42,13 @@ function getTitle(pathname: string) {
 export function Navbar({
   name,
   email,
+  isSidebarOpen = true,
+  onToggleSidebar,
 }: {
   name?: string | null;
   email?: string | null;
+  isSidebarOpen?: boolean;
+  onToggleSidebar?: () => void;
 }) {
   const pathname = usePathname();
 
@@ -36,9 +56,18 @@ export function Navbar({
     <header className="sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--background)]/80 px-4 py-4 backdrop-blur sm:px-6 lg:px-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3 xl:hidden">
-            <PanelLeftOpen className="h-4 w-4 text-[var(--muted)]" />
-          </div>
+          <button
+            type="button"
+            onClick={onToggleSidebar}
+            className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3"
+            aria-label={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
+          >
+            {isSidebarOpen ? (
+              <PanelLeftClose className="h-4 w-4 text-[var(--muted)]" />
+            ) : (
+              <PanelLeftOpen className="h-4 w-4 text-[var(--muted)]" />
+            )}
+          </button>
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-emerald-400">
               Workspace

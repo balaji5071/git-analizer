@@ -57,7 +57,7 @@ export default function HomePage() {
                 Turn public GitHub signals into hiring insight, coaching feedback, and admin analytics.
               </h1>
               <p className="max-w-3xl text-lg leading-8 text-[var(--muted)]">
-                AI GitHub Profile Analyzer combines GitHub data, Groq-powered profile analysis,
+                Eutian Ai combines GitHub data, Groq-powered profile analysis,
                 and role-based dashboards to help teams assess developers faster and help
                 individuals improve with confidence.
               </p>

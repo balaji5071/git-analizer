@@ -20,7 +20,7 @@ export function AppLogo({
       {!compact ? (
         <span className="space-y-0.5">
           <span className="block text-sm font-semibold tracking-tight text-[var(--foreground)]">
-            GitHub Profile Analyzer
+            Eutian Ai
           </span>
           <span className="block text-xs text-[var(--muted)]">
             Recruiter-grade developer intelligence

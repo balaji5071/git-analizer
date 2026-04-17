@@ -93,6 +93,7 @@ export default async function IndividualDashboardPage() {
         description="Run a private scan of your GitHub profile to see strengths, weaknesses, and a practical improvement roadmap."
         history={data.analyses}
         defaultUsername={data.profile?.githubUsername}
+        showRecentAnalyses={false}
       />
     </div>
   );

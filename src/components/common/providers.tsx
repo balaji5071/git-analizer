@@ -11,7 +11,7 @@ export function Providers({ children }: { children: ReactNode }) {
         attribute="class"
         defaultTheme="system"
         enableSystem
-        storageKey="ai-github-profile-analyzer-theme"
+        storageKey="eutian-ai-theme"
       >
         {children}
       </ThemeProvider>

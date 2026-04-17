@@ -1,5 +1,6 @@
 import { Activity, ShieldCheck, Users, WandSparkles } from "lucide-react";
 
+import { AdminUserManagement } from "@/features/dashboard/components/admin-user-management";
 import { StatsCard } from "@/components/dashboard/stats-card";
 import {
   Table,
@@ -13,7 +14,7 @@ import { getAdminDashboardData } from "@/features/dashboard/server/dashboard-dat
 import { formatDate } from "@/utils/format";
 
 export default async function AdminDashboardPage() {
-  await requirePageSession(["admin"]);
+  const session = await requirePageSession(["admin"]);
   const data = await getAdminDashboardData();
 
   return (
@@ -54,38 +55,7 @@ export default async function AdminDashboardPage() {
         />
       </section>
 
-      <section className="space-y-4">
-        <div>
-          <h3 className="text-xl font-semibold text-[var(--foreground)]">Users</h3>
-          <p className="text-sm text-[var(--muted)]">
-            Recently created accounts and their current role assignments.
-          </p>
-        </div>
-        <Table>
-          <thead>
-            <tr>
-              <TableHead>Email</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>GitHub</TableHead>
-              <TableHead>Bookmarks</TableHead>
-              <TableHead>Joined</TableHead>
-              <TableHead>Last login</TableHead>
-            </tr>
-          </thead>
-          <TableSection>
-            {data.users.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.email}</TableCell>
-                <TableCell className="capitalize">{user.role}</TableCell>
-                <TableCell>{user.githubUsername ?? "Not set"}</TableCell>
-                <TableCell>{user.bookmarksCount}</TableCell>
-                <TableCell>{formatDate(user.createdAt)}</TableCell>
-                <TableCell>{user.lastLoginAt ? formatDate(user.lastLoginAt) : "Never"}</TableCell>
-              </TableRow>
-            ))}
-          </TableSection>
-        </Table>
-      </section>
+      <AdminUserManagement initialUsers={data.users} currentAdminId={session.user.id} />
 
       <section className="space-y-4">
         <div>

@@ -10,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "AI GitHub Profile Analyzer",
+  title: "Eutian Ai",
   description:
     "A role-based SaaS platform for recruiters, developers, and admins to evaluate GitHub profiles with AI.",
   icons: {

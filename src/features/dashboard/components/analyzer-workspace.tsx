@@ -43,6 +43,8 @@ export function AnalyzerWorkspace({
   history,
   defaultUsername,
   bookmarks = [],
+  showRecentAnalyses = true,
+  showBookmarks = true,
 }: {
   role: Extract<UserRole, "recruiter" | "individual">;
   title: string;
@@ -50,6 +52,8 @@ export function AnalyzerWorkspace({
   history: AnalysisDocumentShape[];
   defaultUsername?: string | null;
   bookmarks?: string[];
+  showRecentAnalyses?: boolean;
+  showBookmarks?: boolean;
 }) {
   const [username, setUsername] = useState(defaultUsername ?? "");
   const [analyses, setAnalyses] = useState(history);
@@ -59,6 +63,7 @@ export function AnalyzerWorkspace({
   const [isLoading, setIsLoading] = useState(false);
   const [isBookmarking, setIsBookmarking] = useState(false);
   const isIndividualRole = role === "individual";
+  const showSideColumn = showRecentAnalyses || (role === "recruiter" && showBookmarks);
 
   const activeAnalysis =
     analyses.find((analysis) => analysis.id === activeAnalysisId) ?? analyses[0] ?? null;
@@ -151,7 +156,7 @@ export function AnalyzerWorkspace({
   }
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[1.65fr_0.95fr]">
+    <div className={showSideColumn ? "grid gap-6 xl:grid-cols-[1.65fr_0.95fr]" : "grid gap-6"}>
       <div className="space-y-6">
         <Card>
           <CardHeader>
@@ -289,77 +294,81 @@ export function AnalyzerWorkspace({
         )}
       </div>
 
-      <div className="space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent analyses</CardTitle>
-            <CardDescription>
-              Click any result to revisit the stored output and GitHub snapshot.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {analyses.length === 0 ? (
-              <p className="text-sm text-[var(--muted)]">Your analysis history will appear here.</p>
-            ) : (
-              analyses.map((analysis) => (
-                <button
-                  key={analysis.id}
-                  type="button"
-                  onClick={() => setActiveAnalysisId(analysis.id)}
-                  className={`w-full rounded-3xl border p-4 text-left transition ${
-                    activeAnalysis?.id === analysis.id
-                      ? "border-emerald-500/30 bg-emerald-500/10"
-                      : "border-[var(--border)] bg-[var(--surface-strong)] hover:bg-[var(--surface-hover)]"
-                  }`}
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-sm font-semibold text-[var(--foreground)]">
-                        {analysis.githubUsername}
-                      </p>
-                      <p className="mt-1 text-xs text-[var(--muted)]">
-                        {analysis.metrics.topLanguages[0]?.name ?? "Generalist profile"}
-                      </p>
-                    </div>
-                    <ScoreBadge score={analysis.hireabilityScore} />
-                  </div>
-                  <div className="mt-4 flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[var(--muted)]">
-                    <Clock3 className="h-3.5 w-3.5" />
-                    {formatDate(analysis.createdAt)}
-                  </div>
-                </button>
-              ))
-            )}
-          </CardContent>
-        </Card>
+      {showSideColumn ? (
+        <div className="space-y-6">
+          {showRecentAnalyses ? (
+            <Card>
+              <CardHeader>
+                <CardTitle>Recent analyses</CardTitle>
+                <CardDescription>
+                  Click any result to revisit the stored output and GitHub snapshot.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {analyses.length === 0 ? (
+                  <p className="text-sm text-[var(--muted)]">Your analysis history will appear here.</p>
+                ) : (
+                  analyses.map((analysis) => (
+                    <button
+                      key={analysis.id}
+                      type="button"
+                      onClick={() => setActiveAnalysisId(analysis.id)}
+                      className={`w-full rounded-3xl border p-4 text-left transition ${
+                        activeAnalysis?.id === analysis.id
+                          ? "border-emerald-500/30 bg-emerald-500/10"
+                          : "border-[var(--border)] bg-[var(--surface-strong)] hover:bg-[var(--surface-hover)]"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <div>
+                          <p className="text-sm font-semibold text-[var(--foreground)]">
+                            {analysis.githubUsername}
+                          </p>
+                          <p className="mt-1 text-xs text-[var(--muted)]">
+                            {analysis.metrics.topLanguages[0]?.name ?? "Generalist profile"}
+                          </p>
+                        </div>
+                        <ScoreBadge score={analysis.hireabilityScore} />
+                      </div>
+                      <div className="mt-4 flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[var(--muted)]">
+                        <Clock3 className="h-3.5 w-3.5" />
+                        {formatDate(analysis.createdAt)}
+                      </div>
+                    </button>
+                  ))
+                )}
+              </CardContent>
+            </Card>
+          ) : null}
 
-        {role === "recruiter" ? (
-          <Card>
-            <CardHeader>
-              <CardTitle>Bookmarked candidates</CardTitle>
-              <CardDescription>
-                Quick-access list for candidate follow-up and cross-team calibration.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-wrap gap-2">
-              {savedBookmarks.length > 0 ? (
-                savedBookmarks.map((bookmark) => (
-                  <span
-                    key={bookmark}
-                    className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-300"
-                  >
-                    {bookmark}
-                  </span>
-                ))
-              ) : (
-                <p className="text-sm text-[var(--muted)]">
-                  No candidates bookmarked yet.
-                </p>
-              )}
-            </CardContent>
-          </Card>
-        ) : null}
-      </div>
+          {role === "recruiter" && showBookmarks ? (
+            <Card>
+              <CardHeader>
+                <CardTitle>Bookmarked candidates</CardTitle>
+                <CardDescription>
+                  Quick-access list for candidate follow-up and cross-team calibration.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-wrap gap-2">
+                {savedBookmarks.length > 0 ? (
+                  savedBookmarks.map((bookmark) => (
+                    <span
+                      key={bookmark}
+                      className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-300"
+                    >
+                      {bookmark}
+                    </span>
+                  ))
+                ) : (
+                  <p className="text-sm text-[var(--muted)]">
+                    No candidates bookmarked yet.
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }

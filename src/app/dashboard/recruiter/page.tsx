@@ -54,6 +54,8 @@ export default async function RecruiterDashboardPage() {
         description="Search a GitHub username to generate an AI summary, strengths, weaknesses, and a hireability score."
         history={data.analyses}
         bookmarks={data.bookmarks}
+        showRecentAnalyses={false}
+        showBookmarks={false}
       />
     </div>
   );

@@ -28,6 +28,24 @@ const userSchema = new Schema(
       type: String,
       trim: true,
     },
+    phone: {
+      type: String,
+      trim: true,
+    },
+    country: {
+      type: String,
+      trim: true,
+    },
+    resumeText: {
+      type: String,
+    },
+    resumeFileName: {
+      type: String,
+      trim: true,
+    },
+    resumeUpdatedAt: {
+      type: Date,
+    },
     githubUsername: {
       type: String,
       trim: true,
@@ -57,6 +75,11 @@ export interface UserDocument {
   googleId?: string;
   name?: string;
   image?: string;
+  phone?: string;
+  country?: string;
+  resumeText?: string;
+  resumeFileName?: string;
+  resumeUpdatedAt?: Date;
   githubUsername?: string;
   role: UserRole;
   bookmarks: string[];
